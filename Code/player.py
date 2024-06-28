@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     SPRITES = load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, player_id):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
@@ -19,6 +19,29 @@ class Player(pygame.sprite.Sprite):
         self.jump_count = 0
         self.hit = False
         self.hit_count = 0
+        self.id = player_id  # Add player ID
+        self.update_sprite()  # Ensure sprite is initialized
+
+    @classmethod
+    def from_dict(cls, data):
+        """Initialize Player from dictionary."""
+        player = cls(data['x'], data['y'], 50, 50, data['id'])
+        player.x_vel = data['x_vel']
+        player.y_vel = data['y_vel']
+        player.direction = data['direction']
+        player.update_sprite()  # Ensure sprite is initialized
+        return player
+
+    def to_dict(self):
+        """Convert Player to dictionary."""
+        return {
+            'x': self.rect.x,
+            'y': self.rect.y,
+            'x_vel': self.x_vel,
+            'y_vel': self.y_vel,
+            'direction': self.direction,
+            'id': self.id
+        }
 
     def jump(self):
         self.y_vel = -self.GRAVITY * 8
@@ -53,7 +76,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.hit:
             self.hit_count += 1
-        if self.hit_count > fps * 0.5:
+        if self.hit_count > fps * 2:
             self.hit = False
             self.hit_count = 0
 
@@ -68,7 +91,7 @@ class Player(pygame.sprite.Sprite):
     def hit_head(self):
         self.count = 0
         self.y_vel *= -1
-        
+
     def update_sprite(self):
         sprite_sheet = "idle"
         if self.hit:
@@ -78,13 +101,11 @@ class Player(pygame.sprite.Sprite):
                 sprite_sheet = "jump"
             elif self.jump_count == 2:
                 sprite_sheet = "double_jump"
-
         elif self.y_vel > self.GRAVITY * 2:
             sprite_sheet = "fall"
-
         elif self.x_vel != 0:
             sprite_sheet = "run"
-        
+
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites = self.SPRITES[sprite_sheet_name]
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
@@ -93,7 +114,7 @@ class Player(pygame.sprite.Sprite):
         self.update()
 
     def update(self):
-        self.rect = self.sprite.get_rect(topleft = (self.rect.x, self.rect.y))
+        self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
 
     def draw(self, win, offset_x):
