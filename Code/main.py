@@ -14,27 +14,10 @@ from fire import Fire
 from utils import window, WIDTH, HEIGHT
 
 pygame.init()
-pygame.display.set_caption("Platformer")
-
-server = "10.0.0.24"
-port = 5555
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-try:
-    s.bind((server, port))
-except socket.error as e:
-    str(e)
-
-s.listen(2)
-print("Waiting for a connection, Server Started")
-
-players = [Player(0,0,50,50), Player(100,100, 50,50, (0,0,255))]
+pygame.display.set_caption("Inscribed")
 
 FPS = 60
 PLAYER_VEL = 5
-
-
 
 def flip(sprites):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
