@@ -12,7 +12,7 @@ class Network:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            return int(self.client.recv(2048).decode())
+            return int(self.client.recv(2048).decode())  # Receive the player ID from the server
         except:
             pass
 
