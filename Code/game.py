@@ -7,6 +7,7 @@ from os.path import isfile, join
 from player import Player
 from fire import Fire
 from block import Block
+from spellTable import SpellTable
 from utils import load_sprite_sheets, get_block, get_background
 from network import Network
 
@@ -97,10 +98,11 @@ class Game():
         background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
         block_size = 96
         self.player = Player(100, 100, 50, 50, player_id=self.network.id, skin="MaskDude" if self.network.id % 2 == 0 else "NinjaFrog")
+        spellTable = SpellTable(100, 100, 50, 50)
         fire = Fire(300, HEIGHT - block_size - 64, 16, 32)
         fire.on()
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
-        objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size), Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire]
+        objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size), Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire, spellTable]
 
         scroll_area_width = 200
 
