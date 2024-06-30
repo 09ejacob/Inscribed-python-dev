@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.x_vel = 0
         self.y_vel = 0
         self.mask = None
+        self.sprite_sheet = ""
         self.direction = "left"
         self.animation_count = 0
         self.fall_count = 0
@@ -31,6 +32,7 @@ class Player(pygame.sprite.Sprite):
         player.y_vel = data['y_vel']
         player.direction = data['direction']
         player.animation_count = data['animation_count']
+        player.sprite_sheet = data['sprite_sheet']
         player.update_sprite()  # Ensure sprite is initialized
         return player
 
@@ -42,6 +44,7 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = data['y_vel']
         self.direction = data['direction']
         self.animation_count = data['animation_count']
+        self.sprite_sheet = data['sprite_sheet']
         self.update_sprite()
 
     def to_dict(self):
@@ -53,6 +56,7 @@ class Player(pygame.sprite.Sprite):
             'y_vel': self.y_vel,
             'direction': self.direction,
             'animation_count': self.animation_count,
+            'sprite_sheet': self.sprite_sheet,
             'id': self.id
         }
 
@@ -106,26 +110,28 @@ class Player(pygame.sprite.Sprite):
         self.y_vel *= -1
 
     def update_sprite(self):
-        sprite_sheet = "idle"
         if self.hit:
-            sprite_sheet = "hit"
+            self.sprite_sheet = "hit"
         elif self.y_vel < 0:
             if self.jump_count == 1:
-                sprite_sheet = "jump"
+                self.sprite_sheet = "jump"
             elif self.jump_count == 2:
-                sprite_sheet = "double_jump"
+                self.sprite_sheet = "double_jump"
                 print("Double jump")
         elif self.y_vel > self.GRAVITY * 2:
-            sprite_sheet = "fall"
+            self.sprite_sheet = "fall"
         elif self.x_vel != 0:
-            sprite_sheet = "run"
+            self.sprite_sheet = "run"
+        else:
+            self.sprite_sheet = "idle"
 
-        sprite_sheet_name = sprite_sheet + "_" + self.direction
+        sprite_sheet_name = self.sprite_sheet + "_" + self.direction
         sprites = self.SPRITES[sprite_sheet_name]
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
         #print("Animation count: ", self.animation_count)
+        print("Sprite sheet: ", self.sprite_sheet)
         self.update()
 
     def update(self):
