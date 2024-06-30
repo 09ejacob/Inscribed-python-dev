@@ -1,13 +1,16 @@
 import pygame
-from utils import load_sprite_sheets, assign_skin
+from utils import load_sprite_sheets
 
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
-    SPRITES = load_sprite_sheets("MainCharacters", assign_skin(), 32, 32, True)
+    SPRITES = {
+        "MaskDude": load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True),
+        "NinjaFrog": load_sprite_sheets("MainCharacters", "NinjaFrog", 32, 32, True)
+    }
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, player_id):
+    def __init__(self, x, y, width, height, player_id, skin="MaskDude"):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
@@ -21,12 +24,13 @@ class Player(pygame.sprite.Sprite):
         self.hit = False
         self.hit_count = 0
         self.id = player_id  # Add player ID
+        self.skin = skin  # Add skin
         self.update_sprite()  # Ensure sprite is initialized
 
     @classmethod
     def from_dict(cls, data):
         """Initialize Player from dictionary."""
-        player = cls(data['x'], data['y'], 50, 50, data['id'])
+        player = cls(data['x'], data['y'], 50, 50, data['id'], skin=data.get('skin', 'MaskDude'))
         player.x_vel = data.get('x_vel', 0)
         player.y_vel = data.get('y_vel', 0)
         player.direction = data.get('direction', 'left')
@@ -48,6 +52,7 @@ class Player(pygame.sprite.Sprite):
         self.sprite_sheet = data.get('sprite_sheet', self.sprite_sheet)
         self.hit_count = data.get('hit_count', self.hit_count)
         self.hit = data.get('hit', self.hit)
+        self.skin = data.get('skin', self.skin)  # Update skin
         self.update_sprite()
 
     def to_dict(self):
@@ -62,7 +67,8 @@ class Player(pygame.sprite.Sprite):
             'sprite_sheet': self.sprite_sheet,
             'hit_count': self.hit_count,
             'hit': self.hit,
-            'id': self.id
+            'id': self.id,
+            'skin': self.skin  # Add skin to dictionary
         }
 
     def jump(self):
@@ -132,7 +138,7 @@ class Player(pygame.sprite.Sprite):
                 self.animation_count = 0
 
         sprite_sheet_name = self.sprite_sheet + "_" + self.direction
-        sprites = self.SPRITES[sprite_sheet_name]
+        sprites = self.SPRITES[self.skin][sprite_sheet_name]
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1

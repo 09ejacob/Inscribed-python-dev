@@ -40,8 +40,6 @@ class Game():
 
         pygame.display.update()
 
-
-
     def handle_vertical_collision(self, player, objects, dy):
         collided_objects = []
         for obj in objects:
@@ -87,17 +85,18 @@ class Game():
 
     def send_player_data(self):
         data = self.network.send(self.player.to_dict())
-        for player_id, player_data in data.items():
-            player_id = int(player_id)
-            if player_id in self.players:
-                self.players[player_id].update_from_dict(player_data)
-            else:
-                self.players[player_id] = Player.from_dict(player_data)
+        if data:
+            for player_id, player_data in data.items():
+                player_id = int(player_id)
+                if player_id in self.players:
+                    self.players[player_id].update_from_dict(player_data)
+                else:
+                    self.players[player_id] = Player.from_dict(player_data)
 
     def main(self):
         background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
         block_size = 96
-        self.player = Player(100, 100, 50, 50, player_id=self.network.id)
+        self.player = Player(100, 100, 50, 50, player_id=self.network.id, skin="MaskDude" if self.network.id % 2 == 0 else "NinjaFrog")
         fire = Fire(100, HEIGHT - block_size - 64, 16, 32)
         fire.on()
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
