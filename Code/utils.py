@@ -1,14 +1,16 @@
 import pygame
 from os import listdir
 from os.path import isfile, join
+from network import Network
 
 pygame.init()
-
 pygame.display.set_caption("Inscribed")
 
 WIDTH, HEIGHT = 1000, 800
-
 window = pygame.display.set_mode((WIDTH, HEIGHT))
+
+player_id = Network().id
+previous_id = 0
 
 def flip(sprites):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites] # True for flip in x direction. False for flip in y direction
@@ -56,3 +58,13 @@ def get_background(name, width, height):
             tiles.append(pos)
 
     return tiles, image
+
+def assign_skin():
+    if player_id % 2 == 0:
+        skin = "MaskDude"
+        print("MaskDude selected and count set to: ", player_id)
+    else:
+        skin = "NinjaFrog"
+        print("NinjaFrog selected and count set to: ", player_id)
+
+    return skin

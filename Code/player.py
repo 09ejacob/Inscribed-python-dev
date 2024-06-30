@@ -1,17 +1,17 @@
 import pygame
-from utils import load_sprite_sheets
+from utils import load_sprite_sheets, assign_skin
 
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
+    SPRITES = load_sprite_sheets("MainCharacters", assign_skin(), 32, 32, True)
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, skin ,player_id):
+    def __init__(self, x, y, width, height, player_id):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
         self.y_vel = 0
-        self.skin = skin
         self.mask = None
         self.sprite_sheet = "idle"
         self.direction = "left"
@@ -22,8 +22,6 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.id = player_id  # Add player ID
         self.update_sprite()  # Ensure sprite is initialized
-
-    SPRITES = load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
 
     @classmethod
     def from_dict(cls, data):
@@ -139,7 +137,7 @@ class Player(pygame.sprite.Sprite):
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
 
-        print("Sprite sheet: ", self.sprite_sheet, "Animation_count: ", self.animation_count)
+        #print("Sprite sheet: ", self.sprite_sheet, "Animation_count: ", self.animation_count)
         self.update()
 
     def update(self):

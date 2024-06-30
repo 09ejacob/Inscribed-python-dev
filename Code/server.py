@@ -2,7 +2,7 @@ import socket
 from _thread import *
 import pickle
 
-server = "10.0.0.24"
+server = "localhost"
 port = 5555
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -47,9 +47,15 @@ def threaded_client(conn, player_id):
     conn.close()
 
 current_player_id = 0
+num = 0
 
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
     start_new_thread(threaded_client, (conn, current_player_id))
-    current_player_id += 1
+    
+    if (num % 2 == 0):
+        current_player_id += 1
+        num += 1
+    else:
+        num += 1
