@@ -4,14 +4,14 @@ from utils import load_sprite_sheets
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
     GRAVITY = 1
-    SPRITES = load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, player_id):
+    def __init__(self, x, y, width, height, skin ,player_id):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
         self.y_vel = 0
+        self.skin = skin
         self.mask = None
         self.sprite_sheet = "idle"
         self.direction = "left"
@@ -22,6 +22,8 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.id = player_id  # Add player ID
         self.update_sprite()  # Ensure sprite is initialized
+
+    SPRITES = load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
 
     @classmethod
     def from_dict(cls, data):
@@ -98,7 +100,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.hit:
             self.hit_count += 1
-        if self.hit_count > fps * 2:
+        if self.hit_count > fps * 1:
             self.hit = False
             self.hit_count = 0
 

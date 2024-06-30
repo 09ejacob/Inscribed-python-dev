@@ -18,7 +18,16 @@ players = {}
 
 def threaded_client(conn, player_id):
     conn.send(str.encode(str(player_id)))  # Send the player ID to the client
-    players[player_id] = {"x": 100, "y": 100, "x_vel": 0, "y_vel": 0, "direction": "left", "id": player_id}
+    players[player_id] = {
+        "x": 100, "y": 100, 
+        "x_vel": 0, "y_vel": 0, 
+        "direction": "left", 
+        "animation_count": 0, 
+        "sprite_sheet": "idle", 
+        "hit_count": 0, 
+        "hit": False, 
+        "id": player_id
+    }
 
     while True:
         try:

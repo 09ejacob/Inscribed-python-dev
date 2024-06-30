@@ -95,7 +95,13 @@ class Game():
     def main(self):
         background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
         block_size = 96
-        self.player = Player(100, 100, 50, 50, player_id=self.network.id)
+        
+        if (self.network.id)%2 == 0:
+            skin = "MaskDude"
+        else:
+            skin = "NinjaFrog"
+
+        self.player = Player(100, 100, 50, 50, skin, player_id=self.network.id)
         fire = Fire(100, HEIGHT - block_size - 64, 16, 32)
         fire.on()
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
