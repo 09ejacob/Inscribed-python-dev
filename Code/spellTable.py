@@ -7,4 +7,3 @@ class SpellTable(Object):
         super().__init__(x, y, width, height)
         self.spellTable = load_sprite_sheets("UI", "SpellTable", width, height)
         self.image = self.spellTable["Brown"][0]
-        self.mask = pygame.mask.from_surface(self.image)
