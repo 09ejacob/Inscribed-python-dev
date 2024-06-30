@@ -9,6 +9,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y, width, height, player_id):
         super().__init__()
+        print("Init player")
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
         self.y_vel = 0
@@ -29,8 +30,19 @@ class Player(pygame.sprite.Sprite):
         player.x_vel = data['x_vel']
         player.y_vel = data['y_vel']
         player.direction = data['direction']
+        player.animation_count = data['animation_count']
         player.update_sprite()  # Ensure sprite is initialized
         return player
+
+    def update_from_dict(self, data):
+        """Update Player from dictionary."""
+        self.rect.x = data['x']
+        self.rect.y = data['y']
+        self.x_vel = data['x_vel']
+        self.y_vel = data['y_vel']
+        self.direction = data['direction']
+        self.animation_count = data['animation_count']
+        self.update_sprite()
 
     def to_dict(self):
         """Convert Player to dictionary."""
@@ -40,6 +52,7 @@ class Player(pygame.sprite.Sprite):
             'x_vel': self.x_vel,
             'y_vel': self.y_vel,
             'direction': self.direction,
+            'animation_count': self.animation_count,
             'id': self.id
         }
 
@@ -101,6 +114,7 @@ class Player(pygame.sprite.Sprite):
                 sprite_sheet = "jump"
             elif self.jump_count == 2:
                 sprite_sheet = "double_jump"
+                print("Double jump")
         elif self.y_vel > self.GRAVITY * 2:
             sprite_sheet = "fall"
         elif self.x_vel != 0:
@@ -111,6 +125,7 @@ class Player(pygame.sprite.Sprite):
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
+        #print("Animation count: ", self.animation_count)
         self.update()
 
     def update(self):

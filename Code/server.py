@@ -22,7 +22,7 @@ def threaded_client(conn, player_id):
 
     while True:
         try:
-            data = pickle.loads(conn.recv(2048*4))
+            data = pickle.loads(conn.recv(2048*4)) # Maybe reduce this if slow/laggy
             players[player_id] = data
 
             if not data:

@@ -4,7 +4,7 @@ from os.path import isfile, join
 
 pygame.init()
 
-pygame.display.set_caption("Platformer")
+pygame.display.set_caption("Inscribed")
 
 WIDTH, HEIGHT = 1000, 800
 

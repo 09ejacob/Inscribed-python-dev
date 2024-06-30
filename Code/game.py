@@ -11,7 +11,7 @@ from utils import load_sprite_sheets, get_block, get_background
 from network import Network
 
 pygame.init()
-pygame.display.set_caption("Platformer")
+pygame.display.set_caption("Inscribed")
 
 WIDTH, HEIGHT = 1000, 800
 FPS = 60
@@ -85,7 +85,12 @@ class Game():
 
     def send_player_data(self):
         data = self.network.send(self.player.to_dict())
-        self.players = {int(k): Player.from_dict(v) for k, v in data.items()}
+        for player_id, player_data in data.items():
+            player_id = int(player_id)
+            if player_id in self.players:
+                self.players[player_id].update_from_dict(player_data)
+            else:
+                self.players[player_id] = Player.from_dict(player_data)
 
     def main(self):
         background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
