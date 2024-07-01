@@ -19,4 +19,7 @@ class SpellTableLineDrawer:
                 self.drawing = not self.drawing
                 if self.drawing:
                     self.lines.append((self.start_pos, self.end_pos))
-            
+            if event.key == pygame.K_UP:
+                self.drawing = not self.drawing
+                if self.drawing:
+                    self.lines.append((self.start_pos, (100, 100)))
