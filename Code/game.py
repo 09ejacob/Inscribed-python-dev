@@ -8,6 +8,7 @@ from player import Player
 from fire import Fire
 from block import Block
 from spellTable import SpellTable
+from spellTableLineDrawer import SpellTableLineDrawer
 from utils import load_sprite_sheets, get_block, get_background
 from network import Network
 
@@ -28,6 +29,7 @@ class Game():
         self.run = True
         self.player = None
         self.offset_x = 0
+        self.line_drawer = SpellTableLineDrawer()  # Instantiate the line drawer
 
     def draw(self, window, background, bg_image, objects, UI_items):
         for tile in background:
@@ -35,12 +37,15 @@ class Game():
 
         for obj in objects:
             obj.draw(window, self.offset_x)
-        
+
         for items in UI_items:
             items.draw(window, 0)
 
         for player in self.players.values():
             player.draw(window, self.offset_x)
+
+        # Draw lines
+        self.line_drawer.draw(window)
 
         pygame.display.update()
 
@@ -101,8 +106,8 @@ class Game():
         background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
         block_size = 96
         self.player = Player(100, 100, 50, 50, player_id=self.network.id, skin="MaskDude" if self.network.id % 2 == 0 else "NinjaFrog")
-        spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
         fire = Fire(300, HEIGHT - block_size - 64, 16, 32)
+        spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
         fire.on()
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
         objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size), Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire]
@@ -116,11 +121,13 @@ class Game():
                 if event.type == pygame.QUIT:
                     self.run = False
                     break
+
+                # Handle line drawing events
+                self.line_drawer.handle_event(event)
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w and self.player.jump_count < 2:
                         self.player.jump()
-                    if event.key == pygame.K_SPACE:
-                        spellTable.draw_line(window)
 
             self.player.loop(FPS)
             fire.loop()
