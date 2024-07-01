@@ -37,7 +37,7 @@ class Game():
             obj.draw(window, self.offset_x)
         
         for items in UI_items:
-            items.draw(window, self.offset_x)
+            items.draw(window, 0)
 
         for player in self.players.values():
             player.draw(window, self.offset_x)
@@ -101,7 +101,7 @@ class Game():
         background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
         block_size = 96
         self.player = Player(100, 100, 50, 50, player_id=self.network.id, skin="MaskDude" if self.network.id % 2 == 0 else "NinjaFrog")
-        spellTable = SpellTable(800, 0, 64, 64)
+        spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
         fire = Fire(300, HEIGHT - block_size - 64, 16, 32)
         fire.on()
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
@@ -119,6 +119,7 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and self.player.jump_count < 2:
                         self.player.jump()
+                    
 
             self.player.loop(FPS)
             fire.loop()
