@@ -117,9 +117,10 @@ class Game():
                     self.run = False
                     break
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE and self.player.jump_count < 2:
+                    if event.key == pygame.K_w and self.player.jump_count < 2:
                         self.player.jump()
-                    
+                    if event.key == pygame.K_SPACE:
+                        spellTable.draw_line(window)
 
             self.player.loop(FPS)
             fire.loop()
