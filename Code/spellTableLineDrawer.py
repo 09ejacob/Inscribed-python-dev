@@ -1,14 +1,15 @@
 import pygame
 
 class SpellTableLineDrawer:
+    WIDTH = 1000
+
     def __init__(self):
-        self.lines = []  # List to store lines drawn by the local player
+        self.lines = []
         self.drawing = False
-        self.start_pos = (100, 100)
+        self.start_pos = (1000 - (64 * 2), 64 * 2)
         self.end_pos = (500, 500)
 
     def draw(self, window):
-        # Draw lines
         for line in self.lines:
             pygame.draw.line(window, (255, 0, 0), line[0], line[1], 5)
 
@@ -18,3 +19,4 @@ class SpellTableLineDrawer:
                 self.drawing = not self.drawing
                 if self.drawing:
                     self.lines.append((self.start_pos, self.end_pos))
+            
