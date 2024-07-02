@@ -5,9 +5,10 @@ class SpellTableLineDrawer:
 
     def __init__(self):
         self.lines = []
-        self.drawing = False
-        self.start_pos = (1000 - (64 * 2), 64 * 2)
-        self.end_pos = (500, 500)
+        self.moves = []
+        self.drawing = True
+        self.current_x = (1000 - (64 * 2))
+        self.current_y = (64 * 2)
 
     def draw(self, window):
         for line in self.lines:
@@ -16,10 +17,61 @@ class SpellTableLineDrawer:
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                self.drawing = not self.drawing
-                if self.drawing:
-                    self.lines.append((self.start_pos, self.end_pos))
+                # x and y in center of spell table
+                self.current_x = (1000 - (64 * 2))
+                self.current_y = (64 * 2)
+
+                self.lines.clear()
+                print("Clear moves")
+
             if event.key == pygame.K_UP:
-                self.drawing = not self.drawing
+                if self.drawing: # 40 px from one rune to another
+                    new_x = self.current_x
+                    new_y = self.current_y - (40 * 2)
+
+                    self.lines.append(((self.current_x, self.current_y), (self.current_x, new_y))) # y is negative upwards
+                    self.moves.append("UP")
+
+                    self.current_x = new_x
+                    self.current_y = new_y
+
+                    print(self.moves)
+
+            if event.key == pygame.K_DOWN:
                 if self.drawing:
-                    self.lines.append((self.start_pos, (100, 100)))
+                    new_x = self.current_x
+                    new_y = self.current_y + (40 * 2)
+
+                    self.lines.append(((self.current_x, self.current_y), (new_x, new_y)))
+                    self.moves.append("DOWN")
+
+                    self.current_x = new_x
+                    self.current_y = new_y
+
+                    print(self.moves)
+
+            if event.key == pygame.K_LEFT:
+                if self.drawing: # 40 px from one rune to another
+                    new_x = self.current_x - (40 * 2)
+                    new_y = self.current_y
+
+                    self.lines.append(((self.current_x, self.current_y), (new_x, new_y)))
+                    self.moves.append("LEFT")
+
+                    self.current_x = new_x
+                    self.current_y = new_y
+
+                    print(self.moves)
+
+            if event.key == pygame.K_RIGHT:
+                if self.drawing:
+                    new_x = self.current_x + (40 * 2)
+                    new_y = self.current_y
+
+                    self.lines.append(((self.current_x, self.current_y), (new_x, new_y)))
+                    self.moves.append("RIGHT")
+
+                    self.current_x = new_x
+                    self.current_y = new_y
+
+                    print(self.moves)
