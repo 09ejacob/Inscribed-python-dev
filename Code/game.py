@@ -12,6 +12,7 @@ from spellTableLineDrawer import SpellTableLineDrawer
 from utils import load_sprite_sheets, get_block, get_background
 from network import Network
 from spell import Spell
+from fireball import Fireball
 
 pygame.init()
 pygame.display.set_caption("Inscribed")
@@ -33,7 +34,7 @@ class Game():
         self.line_drawer = SpellTableLineDrawer()  # Instantiate the line drawer
         self.spell = Spell(self.line_drawer)
 
-    def draw(self, window, background, bg_image, objects, UI_items):
+    def draw(self, window, background, bg_image, objects, UI_items, spells):
         for tile in background:
             window.blit(bg_image, tile)
 
@@ -42,6 +43,9 @@ class Game():
 
         for items in UI_items:
             items.draw(window, 0)
+
+        for spell in spells:
+            spell.draw(window, self.offset_x)
 
         for player in self.players.values():
             player.draw(window, self.offset_x)
@@ -108,15 +112,22 @@ class Game():
                     self.players[player_id] = Player.from_dict(player_data)
 
     def main(self):
-        background, bg_image = get_background("Blue.png", WIDTH, HEIGHT)
+        background, bg_image = get_background("Green.png", WIDTH, HEIGHT)
         block_size = 96
+        
         self.player = Player(100, 100, 50, 50, player_id=self.network.id, skin="MaskDude" if self.network.id % 2 == 0 else "NinjaFrog")
+
         fire = Fire(300, HEIGHT - block_size - 64, 16, 32)
-        spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
         fire.on()
+
+        spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
+        
+        # fireball = Fireball(500, 500, 16, 16)
+
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
         objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size), Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire]
         UI_items = [spellTable]
+        spells = []
 
         scroll_area_width = 200
 
@@ -136,12 +147,20 @@ class Game():
                     
                     if event.key == pygame.K_SPACE:
                         self.castSpell()
+                        spells.append(Fireball(500, 500, 16, 16))
+
+                        # if self.player != None:
+                        #     print("player is not none")
+                        #     print(self.player.get_x_pos)
+                        # else:
+                        #     print("Player is none")
+                        #spells.append(Fireball(self.player.get_x_pos, self.player.get_y_pos, 16, 16))
 
             self.player.loop(FPS)
             fire.loop()
             self.handle_move(self.player, objects)
             self.send_player_data()
-            self.draw(window, background, bg_image, objects, UI_items)
+            self.draw(window, background, bg_image, objects, UI_items, spells)
 
             if ((self.player.rect.right - self.offset_x >= WIDTH - scroll_area_width) and self.player.x_vel > 0) or (
                     (self.player.rect.left - self.offset_x <= scroll_area_width) and self.player.x_vel < 0):
