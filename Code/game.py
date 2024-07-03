@@ -11,6 +11,7 @@ from spellTable import SpellTable
 from spellTableLineDrawer import SpellTableLineDrawer
 from utils import load_sprite_sheets, get_block, get_background
 from network import Network
+from spell import Spell
 
 pygame.init()
 pygame.display.set_caption("Inscribed")
@@ -30,6 +31,7 @@ class Game():
         self.player = None
         self.offset_x = 0
         self.line_drawer = SpellTableLineDrawer()  # Instantiate the line drawer
+        self.spell = Spell(self.line_drawer)
 
     def draw(self, window, background, bg_image, objects, UI_items):
         for tile in background:
@@ -92,6 +94,9 @@ class Game():
             if obj and obj.name == "fire":
                 player.make_hit()
 
+    def castSpell(self):
+        self.spell.detectSpell()
+
     def send_player_data(self):
         data = self.network.send(self.player.to_dict())
         if data:
@@ -128,6 +133,9 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w and self.player.jump_count < 2:
                         self.player.jump()
+                    
+                    if event.key == pygame.K_SPACE:
+                        self.castSpell()
 
             self.player.loop(FPS)
             fire.loop()
