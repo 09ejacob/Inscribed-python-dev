@@ -9,7 +9,7 @@ class Spell:
         self.spell_wall = ["LEFT", "DOWN", "RIGHT", "RIGHT", "UP", "LEFT"]
         self.line_drawer = line_drawer
 
-    def detectSpell(self):
+    def detectSpell(self): # Add return here
         moves = self.line_drawer.getMoves()
 
         if moves == self.spell_fireball:

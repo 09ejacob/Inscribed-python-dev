@@ -122,12 +122,16 @@ class Game():
         fire.on()
 
         spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
+        fireball_casted = False
+        wall_casted = False
         
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
         objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size), Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire]
         UI_items = [spellTable]
 
         scroll_area_width = 200
+
+        fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16, self.player.get_direction())
 
         while self.run:
             self.clock.tick(FPS)
@@ -144,12 +148,16 @@ class Game():
                         self.player.jump()
                     
                     if event.key == pygame.K_SPACE:
+                        fireball.kill_fireball()
+
                         self.castSpell()
                         fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16, self.player.get_direction())
-                        self.spells.append(fireball)
 
+                        self.spells.append(fireball)
+                        
             self.player.loop(FPS)
             fire.loop()
+            fireball.loop()
             self.handle_move(self.player, objects)
             self.send_player_data()
             self.draw(window, background, bg_image, objects, UI_items, self.spells)
