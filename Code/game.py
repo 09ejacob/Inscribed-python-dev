@@ -33,6 +33,7 @@ class Game():
         self.offset_x = 0
         self.line_drawer = SpellTableLineDrawer()  # Instantiate the line drawer
         self.spell = Spell(self.line_drawer)
+        self.spells = []
 
     def draw(self, window, background, bg_image, objects, UI_items, spells):
         for tile in background:
@@ -99,7 +100,7 @@ class Game():
                 player.make_hit()
 
     def castSpell(self):
-        self.spell.detectSpell()
+        return self.spell.detectSpell()
 
     def send_player_data(self):
         data = self.network.send(self.player.to_dict())
@@ -122,12 +123,9 @@ class Game():
 
         spellTable = SpellTable(WIDTH - (128 * 2), 0, 128, 128)
         
-        # fireball = Fireball(500, 500, 16, 16)
-
         floor = [Block(i * block_size, HEIGHT - block_size, block_size) for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
         objects = [*floor, Block(0, HEIGHT - block_size * 2, block_size), Block(block_size * 3, HEIGHT - block_size * 4, block_size), fire]
         UI_items = [spellTable]
-        spells = []
 
         scroll_area_width = 200
 
@@ -147,20 +145,14 @@ class Game():
                     
                     if event.key == pygame.K_SPACE:
                         self.castSpell()
-                        # spells.append(Fireball(500, 500, 16, 16))
-
-                        if self.player != None:
-                            fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16)
-                            spells.append(fireball)
-                            print(self.player.get_direction())
-                        else:
-                            print("Player is none")
+                        fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16, self.player.get_direction())
+                        self.spells.append(fireball)
 
             self.player.loop(FPS)
             fire.loop()
             self.handle_move(self.player, objects)
             self.send_player_data()
-            self.draw(window, background, bg_image, objects, UI_items, spells)
+            self.draw(window, background, bg_image, objects, UI_items, self.spells)
 
             if ((self.player.rect.right - self.offset_x >= WIDTH - scroll_area_width) and self.player.x_vel > 0) or (
                     (self.player.rect.left - self.offset_x <= scroll_area_width) and self.player.x_vel < 0):

@@ -1,17 +1,25 @@
 import pygame
 from object import Object
-from utils import get_block
 from utils import load_sprite_sheets
-from player import Player
 
 class Fireball(Object): # pygame.sprite.Sprite
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, direction):
         super().__init__(x, y, width, height)
-        self.fireball = load_sprite_sheets("Spells", "Fireball", width, height)
-        self.image = self.fireball["Fireball"][0]
+        self.sprites = load_sprite_sheets("Spells", "Fireball", width, height, False)
+        self.image = self.sprites["Fireball"][0]
         self.mask = pygame.mask.from_surface(self.image)
-        self.x = x
-        self.y = y
+        self.direction = direction
+        self.update_image()
+
+    def update_image(self):
+        if self.direction == "left":
+            self.image = pygame.transform.flip(self.sprites["Fireball"][0], True, False)
+        else:
+            self.image = self.sprites["Fireball"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def draw(self, win, offset_x):
+        win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
 
     # def printdir():
     #     print("Direction: ", Player.get_direction())
