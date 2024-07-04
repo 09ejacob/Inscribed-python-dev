@@ -100,8 +100,11 @@ class Game():
                 player.make_hit()
 
     def castSpell(self):
-        return self.spell.detectSpell()
-
+        detect_spell = self.spell.detectSpell()
+        print(detect_spell)
+        
+        return detect_spell
+    
     def send_player_data(self):
         data = self.network.send(self.player.to_dict())
         if data:
@@ -148,12 +151,13 @@ class Game():
                         self.player.jump()
                     
                     if event.key == pygame.K_SPACE:
-                        fireball.kill_fireball()
+                        cast_spell = self.castSpell()
 
-                        self.castSpell()
-                        fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16, self.player.get_direction())
+                        if cast_spell == "Fireball":
+                            fireball.kill_fireball()
 
-                        self.spells.append(fireball)
+                            fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16, self.player.get_direction())
+                            self.spells.append(fireball)
                         
             self.player.loop(FPS)
             fire.loop()

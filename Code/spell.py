@@ -12,12 +12,19 @@ class Spell:
     def detectSpell(self): # Add return here
         moves = self.line_drawer.getMoves()
 
+        detected_spell = ""
+
         if moves == self.spell_fireball:
-            print("Fireball casted")
+            #print("Fireball casted")
+            detected_spell = "Fireball"
         elif moves == self.spell_wall:
-            print("Wall casted")
+            #print("Wall casted")
+            detected_spell = "Wall"
 
         else:
-            print("No spell casted")
+            #print("No spell casted")
+            detected_spell = "No spell"
 
         self.line_drawer.clearMovesAndLines()
+
+        return detected_spell

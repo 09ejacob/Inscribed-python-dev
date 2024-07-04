@@ -30,14 +30,12 @@ class Fireball(Object): # pygame.sprite.Sprite
         elif self.direction == "left":
             self.rect.x -= self.speed
 
-        # Remove the fireball if it goes off-screen
-        if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
-            self.kill()
-            #print("Killed fireball")
-            #return
-            
+        # Something wrong here
+        # if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
+        #     self.image = self.sprites["Clear"][0]
+        #     self.kill()
         
-    def kill_fireball(self):
+    def kill_fireball(self): # Add an animation to destroy fireball
         self.image = self.sprites["Clear"][0]
         self.kill()
 
