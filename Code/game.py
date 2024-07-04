@@ -147,14 +147,14 @@ class Game():
                     
                     if event.key == pygame.K_SPACE:
                         self.castSpell()
-                        spells.append(Fireball(500, 500, 16, 16))
+                        # spells.append(Fireball(500, 500, 16, 16))
 
-                        # if self.player != None:
-                        #     print("player is not none")
-                        #     print(self.player.get_x_pos)
-                        # else:
-                        #     print("Player is none")
-                        #spells.append(Fireball(self.player.get_x_pos, self.player.get_y_pos, 16, 16))
+                        if self.player != None:
+                            fireball = Fireball(self.player.get_x_pos(), self.player.get_y_pos() + (16 * 2), 16, 16)
+                            spells.append(fireball)
+                            print(self.player.get_direction())
+                        else:
+                            print("Player is none")
 
             self.player.loop(FPS)
             fire.loop()

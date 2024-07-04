@@ -25,8 +25,8 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.id = player_id  # Add player ID
         self.skin = skin  # Add skin
-        self.x_pos = x
-        self.y_pos = y
+        # self.x_pos = self.rect.x
+        # self.y_pos = self.rect.y
         self.update_sprite()  # Ensure sprite is initialized
 
     @classmethod
@@ -74,10 +74,13 @@ class Player(pygame.sprite.Sprite):
         }
 
     def get_x_pos(self):
-        return self.x_pos
+        return self.rect.x
     
     def get_y_pos(self):
-        return self.y_pos
+        return self.rect.y
+    
+    def get_direction(self):
+        return str(self.direction)
 
     def jump(self):
         self.y_vel = -self.GRAVITY * 8
