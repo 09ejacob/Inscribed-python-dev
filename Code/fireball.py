@@ -24,6 +24,9 @@ class Fireball(Object): # pygame.sprite.Sprite
     def draw(self, win, offset_x):
         win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
 
+    def get_direction(self):
+        return self.direction
+
     def loop(self):
         if self.direction == "right":
             self.rect.x += self.speed
